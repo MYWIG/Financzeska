@@ -1,47 +1,66 @@
 ﻿@page "/"
 
 @using FinanczeskaServerApp.Services;
+
+@inject ChatHistoryService _chatHistoryService
 @inject JsonDataSerializer _jsonDataSerializer
 @inject IHttpContextAccessor _httpContextAccessor;
 
-<h3>PostTextContent</h3>
+<div class="row">
+    <div class="col-3">
+        @foreach (var history in historyList)
+        {
+            <div>history</div>
+        }
+    </div>
+    <div class="col-9">
+        <h3>PostTextContent</h3>
 
-<div class="container-md bg-light">
+        <div class="container-md bg-light">
 
-    <div class="ChatContainer col-12" style="min-height:400px;">
-        <div class="QuestionContainer col-12">
-            @text
-        </div>
-        <br />
-        <div class="AnswerContainer col-12">
-            @foreach (string value in new List<string>())
-            {
-                <div>value</div>
-            }
+            <div class="ChatContainer col-12" style="min-height:400px;">
+                <div class="QuestionContainer col-12">
+                    @text
+                </div>
+                <br />
+                <div class="AnswerContainer col-12">
+                    @foreach (string value in new List<string>())
+                    {
+                        <div>value</div>
+                    }
+                </div>
+            </div>
+
+            <EditForm Model="@text" OnSubmit="@Submit">
+                <div class="row">
+                    <div class="ChatText col-10">
+                        @*make input text invisible*@
+                        <InputText @bind-Value="text" style="background: transparent;border: none;outline: none;height: 100%;" />
+                    </div>
+                    <div class="col-2 text-center">
+                        <button class="SubmitButton" type="submit">Submit</button>
+                    </div>
+                </div>
+            </EditForm>
         </div>
     </div>
-
-    <EditForm Model="@text" OnSubmit="@Submit">
-        <div class="row">
-            <div class="ChatText col-10">
-                @*make input text invisible*@
-                <InputText @bind-Value="text" style="background: transparent;border: none;outline: none;height: 100%;" />
-            </div>
-            <div class="col-2 text-center">
-                <button class="SubmitButton" type="submit">Submit</button>
-            </div>
-        </div>
-    </EditForm>
-
 </div>
-
-
-
 
 
 @code {
     private string text = "";
 
+    protected override async Task OnInitializedAsync()
+    {
+        string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        if (clientIP == null)
+        {
+            clientIP = "undefinded";
+        }
+        historyList = _chatHistoryService.GetUserChatList(clientIP);
+    }
+
+    List<string> historyList;
 
     private void Submit()
     {
