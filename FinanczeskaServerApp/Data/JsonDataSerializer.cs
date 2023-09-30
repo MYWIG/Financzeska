@@ -3,12 +3,12 @@
     public class JsonDataSerializer
     {
         //class for serializing data to json
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
 
         //method for serializing data to json
-        public static void SerializeToJson(int id, string question, string answer)
+        public static void SerializeToJson(string id, string question, string answer)
         {
             //create a json string from the object
             var jsonDataSerializer = new JsonDataSerializer

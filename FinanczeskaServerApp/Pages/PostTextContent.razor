@@ -1,7 +1,8 @@
 ﻿@page "/post-text-content"
 
 @using FinanczeskaServerApp.Data
-@inject JsonDataSerializer JsonDataSerializer
+@inject JsonDataSerializer _JsonDataSerializer
+@inject IHttpContextAccessor _httpContextAccessor;
 
 <h3>PostTextContent</h3>
 
@@ -13,9 +14,14 @@
 @code {
     private string text = "";
 
+
     private void Submit()
     {
-        JsonDataSerializer.SerializeToJson(1, text, null);
+        string clientIP = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+        if (clientIP != null)
+        {
+            JsonDataSerializer.SerializeToJson(clientIP, text, null);
+        }
     }
 
 }
