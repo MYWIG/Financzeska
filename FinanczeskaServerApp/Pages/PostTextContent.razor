@@ -1,0 +1,21 @@
+﻿@page "/post-text-content"
+
+@using FinanczeskaServerApp.Data
+@inject JsonDataSerializer JsonDataSerializer
+
+<h3>PostTextContent</h3>
+
+<EditForm Model="@text" OnSubmit="@Submit">
+    <InputText @bind-Value="text" />
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private string text = "";
+
+    private void Submit()
+    {
+        JsonDataSerializer.SerializeToJson(1, text, null);
+    }
+
+}
