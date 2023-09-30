@@ -1,15 +1,17 @@
 using FinanczeskaServerApp.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddScoped<WeatherForecastService>();
 builder.Services.AddTransient<JsonDataSerializer>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
 
 var app = builder.Build();
 

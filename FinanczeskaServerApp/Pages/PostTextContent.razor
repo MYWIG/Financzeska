@@ -1,7 +1,7 @@
 ﻿@page "/post-text-content"
 
 @using FinanczeskaServerApp.Data
-@inject JsonDataSerializer _JsonDataSerializer
+@inject JsonDataSerializer _jsonDataSerializer
 @inject IHttpContextAccessor _httpContextAccessor;
 
 <h3>PostTextContent</h3>
@@ -49,7 +49,7 @@
         {
             clientIP = "undefinded";
         }
-        JsonDataSerializer.SerializeToJson(clientIP, text);
+        _jsonDataSerializer.SerializeToJson(clientIP, text);
     }
 
 }
