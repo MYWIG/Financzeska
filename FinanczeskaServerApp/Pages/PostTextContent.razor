@@ -1,7 +1,8 @@
 ﻿@page "/post-text-content"
 
 @using FinanczeskaServerApp.Data
-@inject JsonDataSerializer JsonDataSerializer
+@inject JsonDataSerializer _JsonDataSerializer
+@inject IHttpContextAccessor _httpContextAccessor;
 
 <div class="container-md bg-secondary" style="height:50px">
     <div class="row">
@@ -19,9 +20,15 @@
 @code {
     private string text = "";
 
+
     private void Submit()
     {
-        JsonDataSerializer.SerializeToJson(1, text, null);
+        string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        if (clientIP == null)
+        {
+            clientIP = "undefinded";
+        }
+        JsonDataSerializer.SerializeToJson(clientIP, text);
     }
 
 }
