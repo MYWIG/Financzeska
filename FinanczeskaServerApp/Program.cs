@@ -1,4 +1,5 @@
 using FinanczeskaServerApp.Data;
+using FinanczeskaServerApp.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<WeatherForecastService>();
+builder.Services.AddScoped<ChatHistoryService>();
 builder.Services.AddTransient<JsonDataSerializer>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 

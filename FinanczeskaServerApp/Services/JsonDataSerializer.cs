@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using System.Reflection.Metadata.Ecma335;
 
-namespace FinanczeskaServerApp.Data
+namespace FinanczeskaServerApp.Services
 {
     public class JsonDataSerializer
     {
@@ -18,7 +18,7 @@ namespace FinanczeskaServerApp.Data
         {
             try
             {
-                if(id.Equals("::1"))
+                if (id.Equals("::1"))
                 {
                     id = "localhost";
                 }
@@ -38,7 +38,7 @@ namespace FinanczeskaServerApp.Data
                     Directory.CreateDirectory(dir);
 
                 //create Todays File
-                string filePath = Path.Combine(dir, $"{DateTime.Now:yyyy-MM-dd}.json") ;
+                string filePath = Path.Combine(dir, $"{DateTime.Now:yyyy-MM-dd}.json");
 
                 if (!File.Exists(filePath))
                     File.Create(filePath);
@@ -53,7 +53,7 @@ namespace FinanczeskaServerApp.Data
                 ////fileStream(filePath, json);
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }

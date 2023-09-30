@@ -1,6 +1,6 @@
 ﻿@page "/post-text-content"
 
-@using FinanczeskaServerApp.Data
+@    using FinanczeskaServerApp.Data
 @inject JsonDataSerializer _jsonDataSerializer
 @inject IHttpContextAccessor _httpContextAccessor;
 
@@ -14,10 +14,10 @@
         </div>
         <br/>
         <div class="AnswerContainer col-12">
-            @*@foreach (string value in new List<string>())
+            @foreach (string value in new List<string>())
             {
-            <div>value</div>
-            }*@
+                <div>value</div>
+            }
         </div>
     </div>
 
@@ -50,7 +50,13 @@
         {
             clientIP = "undefinded";
         }
-        _jsonDataSerializer.SerializeToJson(clientIP, text);
+        
+        var t = _jsonDataSerializer.SerializeToJson(clientIP, text);
+
+        // var div = document.createElement("div");
+        // div.textContent = "This is a dynamically created div!";
+        // document.body.appendChild(div);
+
     }
 
 }
