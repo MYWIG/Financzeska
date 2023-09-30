@@ -1,9 +1,62 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+@using FinanczeskaServerApp.Services;
+@inject JsonDataSerializer _jsonDataSerializer
+@inject IHttpContextAccessor _httpContextAccessor;
 
-<h1>Hello, world!</h1>
+<h3>PostTextContent</h3>
 
-Welcome to your new app.
+<div class="container-md bg-light">
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <div class="ChatContainer col-12" style="min-height:400px;">
+        <div class="QuestionContainer col-12">
+            @text
+        </div>
+        <br />
+        <div class="AnswerContainer col-12">
+            @foreach (string value in new List<string>())
+            {
+                <div>value</div>
+            }
+        </div>
+    </div>
+
+    <EditForm Model="@text" OnSubmit="@Submit">
+        <div class="row">
+            <div class="ChatText col-10">
+                @*make input text invisible*@
+                <InputText @bind-Value="text" style="background: transparent;border: none;outline: none;height: 100%;" />
+            </div>
+            <div class="col-2 text-center">
+                <button class="SubmitButton" type="submit">Submit</button>
+            </div>
+        </div>
+    </EditForm>
+
+</div>
+
+
+
+
+
+@code {
+    private string text = "";
+
+
+    private void Submit()
+    {
+        string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        if (clientIP == null)
+        {
+            clientIP = "undefinded";
+        }
+
+        var t = _jsonDataSerializer.SerializeToJson(clientIP, text);
+
+        // var div = document.createElement("div");
+        // div.textContent = "This is a dynamically created div!";
+        // document.body.appendChild(div);
+
+    }
+
+}
