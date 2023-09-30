@@ -1,38 +1,51 @@
 ﻿@page "/"
 
 @using FinanczeskaServerApp.Services;
-@inject JsonDataSerializer _jsonDataSerializer
+@inject JsonDataSerializer _jsonDataSerializer;
+@inject ChatHistoryService _chatHistoryService;
 @inject IHttpContextAccessor _httpContextAccessor;
 
 <h3>PostTextContent</h3>
 
-<div class="container-md bg-light">
+<div id="MainContainer " class="row">
 
-    <div class="ChatContainer col-12" style="min-height:400px;">
-        <div class="QuestionContainer col-12">
+    <div class="col-2" style="background-color:#011520">
+
+        @foreach (string item in chats)
+        {
+            <div>
+                @item
+            </div>
+        }
+
+    </div>
+
+    <div class="MessagesContainer col-8 offset-1" style="min-height:400px;">
+        <div class="QuestionContainer col-8">
             @text
         </div>
         <br />
-        <div class="AnswerContainer col-12">
+        <div class="AnswerContainer col-8">
             @foreach (string value in new List<string>())
             {
-                <div>value</div>
+                <div class="col-8">value</div>
             }
         </div>
+        <br />
     </div>
 
-    <EditForm Model="@text" OnSubmit="@Submit">
-        <div class="row">
-            <div class="ChatText col-10">
-                @*make input text invisible*@
-                <InputText @bind-Value="text" style="background: transparent;border: none;outline: none;height: 100%;" />
-            </div>
-            <div class="col-2 text-center">
-                <button class="SubmitButton" type="submit">Submit</button>
-            </div>
-        </div>
-    </EditForm>
+</div>
 
+
+
+<div class="row">
+    <div class="ChatText col-10">
+        @*make input text invisible*@
+        <input @bind="text" style="background: transparent;border: none;outline: none;height: 100%;" />
+    </div>
+    <div class="col-2 text-center">
+        <button class="SubmitButton" @onclick="Submit" type="submit">Submit</button>
+    </div>
 </div>
 
 
@@ -41,22 +54,47 @@
 
 @code {
     private string text = "";
+    List<string> chats = new List<string>() { "Test1", "Test2", "Test3" };
 
+    protected override async Task OnInitializedAsync()
+    {
+        // string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        // if (clientIP.Equals("::1"))
+        //     clientIP = "localhost";
+        // chats = _chatHistoryService.GetUserChatList(clientIP);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        try
+        {
+            // string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            // if (clientIP.Equals("::1"))
+            //     clientIP = "localhost";
+            // chats = _chatHistoryService.GetUserChatList(clientIP);
+
+            // execute conditionally for loading data, otherwise this will load
+            // every time the page refreshes
+            if (firstRender)
+            {
+                // Do work to load page data and set properties
+            }
+        }
+        catch(Exception ex)
+        {
+            
+        }
+
+    }
 
     private void Submit()
     {
         string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
         if (clientIP == null)
-        {
             clientIP = "undefinded";
-        }
 
         var t = _jsonDataSerializer.SerializeToJson(clientIP, text);
-
-        // var div = document.createElement("div");
-        // div.textContent = "This is a dynamically created div!";
-        // document.body.appendChild(div);
-
+        
     }
 
 }
