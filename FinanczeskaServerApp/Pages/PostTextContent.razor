@@ -17,7 +17,11 @@
 
     private void Submit()
     {
-        string clientIP = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+        string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        if (clientIP == null)
+        {
+            clientIP = "undefinded";
+        }
         JsonDataSerializer.SerializeToJson(clientIP, text);
     }
 
