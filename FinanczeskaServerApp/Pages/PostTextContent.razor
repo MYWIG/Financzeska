@@ -18,10 +18,7 @@
     private void Submit()
     {
         string clientIP = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
-        if (clientIP != null)
-        {
-            JsonDataSerializer.SerializeToJson(clientIP, text, null);
-        }
+        JsonDataSerializer.SerializeToJson(clientIP, text);
     }
 
 }
