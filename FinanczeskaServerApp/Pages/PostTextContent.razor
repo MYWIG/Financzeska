@@ -1,0 +1,34 @@
+﻿@page "/post-text-content"
+
+@using FinanczeskaServerApp.Data
+@inject JsonDataSerializer _JsonDataSerializer
+@inject IHttpContextAccessor _httpContextAccessor;
+
+<div class="container-md bg-secondary" style="height:50px">
+    <div class="row">
+        <div class="col-lg-6"></div>
+    </div>
+</div>
+
+<h3>PostTextContent</h3>
+<EditForm Model="@text" OnSubmit="@Submit">
+    <InputText @bind-Value="text" />
+    <button type="submit">Submit</button>
+</EditForm>
+
+
+@code {
+    private string text = "";
+
+
+    private void Submit()
+    {
+        string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        if (clientIP == null)
+        {
+            clientIP = "undefinded";
+        }
+        JsonDataSerializer.SerializeToJson(clientIP, text);
+    }
+
+}
