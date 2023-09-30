@@ -3,12 +3,18 @@
 @using FinanczeskaServerApp.Data
 @inject JsonDataSerializer JsonDataSerializer
 
-<h3>PostTextContent</h3>
+<div class="container-md bg-secondary" style="height:50px">
+    <div class="row">
+        <div class="col-lg-6"></div>
+    </div>
+</div>
 
+<h3>PostTextContent</h3>
 <EditForm Model="@text" OnSubmit="@Submit">
     <InputText @bind-Value="text" />
     <button type="submit">Submit</button>
 </EditForm>
+
 
 @code {
     private string text = "";
