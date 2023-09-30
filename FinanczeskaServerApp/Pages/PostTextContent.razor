@@ -15,7 +15,11 @@
 
     private void Submit()
     {
-        JsonDataSerializer.SerializeToJson(1, text, null);
+        //get HttpContextAccessor from DI
+        var httpContextAccessor = new HttpContextAccessor();
+        //get the current HttpContext
+        var httpContext = httpContextAccessor.HttpContext;
+        JsonDataSerializer.SerializeToJson(text, text, httpContext);
     }
 
 }
