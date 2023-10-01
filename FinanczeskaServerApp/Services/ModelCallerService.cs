@@ -1,13 +1,19 @@
 ﻿using FinanczeskaServerApp.Data;
+using System;
+using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 
 namespace FinanczeskaServerApp.Services
 {
-    // This Sevice is call model
+    /// <summary>
+    /// Serwis do wywoływania modelu
+    /// </summary>
     public class ModelCallerService
     {
-
         private readonly IWebHostEnvironment _environment;
 
         public ModelCallerService(IWebHostEnvironment environment)
@@ -15,34 +21,45 @@ namespace FinanczeskaServerApp.Services
             _environment = environment ?? throw new ArgumentNullException(nameof(environment));
         }
 
+        /// <summary>
+        /// Parsuje plik CSV i formatuje go
+        /// </summary>
+        /// <param name="filePath">Ścieżka do pliku CSV</param>
+        /// <returns>Przetworzony tekst</returns>
         private string ParseCsvAndFormat(string filePath)
         {
-            // Read all text from the CSV file
+            // Odczytuje cały tekst z pliku CSV
             string csvText = File.ReadAllText(filePath);
 
-            // Replace semicolons with periods and remove tabulations (tab characters)
+            // Zamienia średniki na kropki i usuwa tabulacje
             string cleanedCsv = csvText.Replace(';', '.').Replace("\t", "");
 
-            // Replace '\r\n' (carriage return and newline) with a dot
+            // Zamienia znaki '\r\n' na kropki
             cleanedCsv = cleanedCsv.Replace("\r\n", ". ");
 
             return cleanedCsv;
         }
 
+        /// <summary>
+        /// Wysyła dane do serwera asystenta
+        /// </summary>
+        /// <param name="apiUrl">Adres URL API</param>
+        /// <param name="jsonContent">Zawartość w formacie JSON</param>
+        /// <returns>Odpowiedź od serwera</returns>
         private async Task<string> PostDataToServerAsync(string apiUrl, string jsonContent)
         {
             using (var httpClient = new HttpClient())
             {
                 try
                 {
-                    // Define the content type as application/json
+                    // Definiuje nagłówki HTTP
                     httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
                     httpClient.DefaultRequestHeaders.Add("ContentType", "application/json");
 
-                    // Create a StringContent object with the JSON data
+                    // Tworzy obiekt StringContent z danymi JSON
                     var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                    // Send a POST request with the JSON data
+                    // Wysyła żądanie POST z danymi JSON
                     HttpResponseMessage response = await httpClient.PostAsync(apiUrl, content);
 
                     if (response.IsSuccessStatusCode)
@@ -52,46 +69,44 @@ namespace FinanczeskaServerApp.Services
                     }
                     else
                     {
-                        Console.WriteLine($"Error: {response.StatusCode}");
+                        Console.WriteLine($"Błąd: {response.StatusCode}");
                         return null;
                     }
                 }
                 catch (HttpRequestException ex)
                 {
-                    Console.WriteLine($"HttpRequestException: {ex.Message}");
+                    Console.WriteLine($"Błąd HttpRequestException: {ex.Message}");
                     return null;
                 }
             }
         }
 
         /// <summary>
-        /// General ask model Implementation
+        /// Wywołuje model asystenta
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="UserInputData"></param>
-        /// <returns></returns>
+        /// <param name="userId">ID użytkownika</param>
+        /// <param name="userInputData">Dane wprowadzone przez użytkownika</param>
+        /// <param name="valueToSelect">Wartość do wyboru</param>
+        /// <returns>Odpowiedź modelu asystenta</returns>
         public async Task<string> AskModel(string userId, string userInputData, int valueToSelect)
         {
             try
             {
                 string apiResponse = string.Empty;
-                // Define the API endpoint URL
+                // Definiuje URL końcowe API
                 string apiUrl = "http://46.170.221.65:5001/api/v1/generate";
 
                 string dataFile;
-                // mock Temporary
+                // Tymczasowo używane dane
                 dataFile = "data" + valueToSelect.ToString() + ".csv";
 
-
-                var dataFilePath = Path.Combine(_environment.WebRootPath, "PublicData"+ "\\"+dataFile);
+                var dataFilePath = Path.Combine(_environment.WebRootPath, "PublicData" + "\\" + dataFile);
 
                 try
                 {
                     string formattedCsv = ParseCsvAndFormat(dataFilePath);
 
-                    string clientMessege = "Ile bezrobotnych bylo w drugim kwartale?";
-
-                    // Define the JSON data to send to the server
+                    // Definiuje dane JSON do wysłania na serwer
                     string jsonData = $@"{{
                     ""n"": 1,
                     ""max_context_length"": 4096,
@@ -112,33 +127,28 @@ namespace FinanczeskaServerApp.Services
                     ""stop_sequence"": [""You: "", ""\nYou "", ""\nKoboldAI: ""]
                 }}";
 
-                    // Make the POST request
+                    // Wysyła żądanie POST
                     Console.WriteLine(jsonData);
                     apiResponse = await PostDataToServerAsync(apiUrl, jsonData);
                     if (apiResponse == null)
-                        return "Error";
+                        return "Błąd";
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    Console.WriteLine($"Wystąpił błąd: {ex.Message}");
                 }
-                // Define the text pattern to parse
-                    
-                // Use 
-         
 
+                // Deserializuje odpowiedź JSON
                 RootObject rootObject = JsonSerializer.Deserialize<RootObject>(apiResponse);
 
-                // Access the strongly typed data
+                // Pobiera tekst z odpowiedzi
                 string text = rootObject.results[0].text;
                 return text;
             }
             catch (Exception ex)
             {
-                return "Error";
+                return "Błąd";
             }
-
         }
-
     }
 }
