@@ -22,13 +22,13 @@ namespace FinanczeskaServerApp.Services
             {
 
                 // Specify the directory where chat history files are stored    
-                string chatDirectory = Path.Combine(_webHostEnvironment.ContentRootPath + "\\Chats", userId);
+                string chatDirectory = Path.Combine(_webHostEnvironment.ContentRootPath + "Chats", userId);
                 if(!Directory.Exists(chatDirectory))
                     return new List<Message>(){ new Message(DateTime.Now, "Error", false) };
 
                 // read value of chat chatDirectory + .json
                 // Read the content of the chat file
-                string filenPath = Path.Combine(chatDirectory, chat.Name + "_" + chat.DateOnly + ".json");
+                string filenPath = Path.Combine(chatDirectory, chat.Name + "_" + chat.DateOnly.ToString("yyyy-MM-dd") + ".json");
                 if (!File.Exists(filenPath))
                     return new List<Message>();
                 
@@ -44,7 +44,7 @@ namespace FinanczeskaServerApp.Services
             }
             catch(Exception ex)
             {
-                throw;
+                return new List<Message>() { new Message(DateTime.Now, "Error during ftech", true)  };
             }
         }
 
@@ -79,9 +79,18 @@ namespace FinanczeskaServerApp.Services
                     if (!DateTime.TryParseExact(dateString, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
                         return result;
 
-                    
+                    // Define the regex pattern to match a GUID
+                    string pattern = @"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b";
 
-                    Chat chat = new(splittedString[0], DateOnly.FromDateTime(parsedDate));
+                    // Use Regex.Match to find the first match
+                    Match match = Regex.Match(splittedString[0], pattern);
+
+                    if (!match.Success)
+                        return result;
+                    
+                    string guidString = match.Value;
+                    Guid guid = Guid.Parse(guidString);
+                    Chat chat = new(guid.ToString(), DateOnly.FromDateTime(parsedDate));
 
                     result.Add(chat);
 

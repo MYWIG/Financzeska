@@ -40,7 +40,7 @@
       <section class="chat" >
 
         <div class="messages-chat">
-                    @if (messages.Count == 0)
+                    @if (messages.Count == 0 && selectedBot == null)
                     {
                         <div class="message, text">
                             <p >Prosze wybrać bota, z którym mozna prowadzić rozmowe na temat finansowy albo statystyczny: </p>
@@ -99,9 +99,10 @@
 
 
 @code {
+    
     string sounrRecordError = "Nagranie Głosu";
-    int selectedBot;
-    string currentConversation;
+    int? selectedBot;
+    Chat currentConversation;
     bool firstRender;
     private string text = "";
     List<Chat> chats;
@@ -116,7 +117,6 @@
     {
         try
         {
-            selectedBot = 1;
             string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
             if (clientIP.Equals("::1"))
                 clientIP = "localhost";
@@ -126,7 +126,12 @@
             {
                 Chat defaultChat = chats.First();
 
+                currentConversation = defaultChat;
                 messages = _chatService.GetChatHistory(clientIP, defaultChat);
+            }
+            else
+            {
+                OnCreateNewChatClick();
             }
 
             StateHasChanged();
@@ -147,6 +152,7 @@
                 clientIP = "localhost";
 
             selectedBot = idOfDataFile;
+            messages = _chatService.GetChatHistory(clientIP, currentConversation);
 
             StateHasChanged();
 
@@ -167,7 +173,7 @@
 
             messages = _chatService.GetChatHistory(clientIP, chat);
 
-            currentConversation = chat.Name;
+            currentConversation = chat;
             StateHasChanged();
 
         }
@@ -243,7 +249,7 @@
         bool humanResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP,currentConversation, message);
         messages.Add(message);
 
-        string resonse = await _modelCallerService.AskModel(clientIP, text, selectedBot);
+        string resonse = await _modelCallerService.AskModel(clientIP, text, selectedBot.Value);
         Message botResponseMessage = new Message(DateTime.Now, resonse, false);
         bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP,currentConversation, botResponseMessage);
         messages.Add(botResponseMessage);
