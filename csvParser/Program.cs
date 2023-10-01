@@ -1,49 +1,114 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace csvParser
 {
     internal class Program
     {
-        static void Main()
+        private static async Task Main()
         {
-            // Read the CSV file
-            string[] lines = File.ReadAllLines("E:\\Downloads\\1.csv");
+            // Define the API endpoint URL
+            string apiUrl = "http://46.170.221.65:5001/api/v1/generate";
+            string filePath = "E:\\Downloads\\Struktura_zarejestrowanych_bezrobotnych_w_roku_2022.csv";
 
-            List<string> parsedData = new List<string>();
-
-            foreach (string line in lines)
+            try
             {
-                string[] parts = line.Split(';');
+                string formattedCsv = ParseCsvAndFormat(filePath);
 
-                if (parts.Length < 4)
-                    continue; // Skip lines with insufficient data
+                string clientMessege = "Ile bezrobotnych bylo w drugim kwartale?";
 
-                string indicator = parts[0].Trim();
-                string unit = parts[2].Trim();
+                // Define the JSON data to send to the server
+                string jsonData = $@"{{
+                    ""n"": 1,
+                    ""max_context_length"": 4096,
+                    ""max_length"": 100,
+                    ""rep_pen"": 1.1,
+                    ""temperature"": 0.7,
+                    ""top_p"": 0.92,
+                    ""top_k"": 0,
+                    ""top_a"": 0,
+                    ""typical"": 1,
+                    ""tfs"": 1,
+                    ""rep_pen_range"": 320,
+                    ""rep_pen_slope"": 0.7,
+                    ""sampler_order"": [6, 0, 1, 3, 4, 2, 5],
+                    ""prompt"": ""[Jesteś AI. Odpowiadasz nie więcej, niż 15 słów. {formattedCsv}]\n\n{clientMessege}"",
+                    ""quiet"": true,
+                    ""stop_sequence"": [""You: "", ""\nYou "", ""\nKoboldAI: ""]
+                }}";
 
-                List<string> dataValues = new List<string>();
+                // Make the POST request
+                Console.WriteLine(jsonData);
+                string apiResponse = await PostDataToServerAsync(apiUrl, jsonData);
 
-                for (int i = 3; i < parts.Length; i++)
+                if (apiResponse != null)
                 {
-                    // Replace spaces with dots and remove non-digit characters
-                    string cleanedValue = Regex.Replace(parts[i], @"[^\d.]", "").Replace(".", "").Insert(1, ".");
-                    dataValues.Add(cleanedValue);
+                    Console.WriteLine("API Response:");
+                    Console.WriteLine(apiResponse);
                 }
-
-                string formattedData = string.Join("; ", dataValues.Zip(Enumerable.Range(1995, dataValues.Count), (v, y) => $"{v} {unit}, {y}"));
-                string result = $"{indicator} w {unit} wynosiło; {formattedData}";
-
-                parsedData.Add(result);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            // Define the text pattern to parse
 
-            string parsedDataStr = string.Join("\n", parsedData);
+            // Use regular expressions to extract the data
+               
 
-            // Print or save the parsed data as needed
-            Console.WriteLine(parsedDataStr);
+        }
+
+        static string ParseCsvAndFormat(string filePath)
+        {
+            // Read all text from the CSV file
+            string csvText = File.ReadAllText(filePath);
+
+            // Replace semicolons with periods and remove tabulations (tab characters)
+            string cleanedCsv = csvText.Replace(';', '.').Replace("\t", "");
+
+            // Replace '\r\n' (carriage return and newline) with a dot
+            cleanedCsv = cleanedCsv.Replace("\r\n", ". ");
+
+            return cleanedCsv;
+        }
+
+        private static async Task<string> PostDataToServerAsync(string apiUrl, string jsonContent)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                try
+                {
+                    // Define the content type as application/json
+                    httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+                    httpClient.DefaultRequestHeaders.Add("ContentType", "application/json");
+
+                    // Create a StringContent object with the JSON data
+                    var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                    // Send a POST request with the JSON data
+                    HttpResponseMessage response = await httpClient.PostAsync(apiUrl, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseContent = await response.Content.ReadAsStringAsync();
+                        return responseContent;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Error: {response.StatusCode}");
+                        return null;
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    Console.WriteLine($"HttpRequestException: {ex.Message}");
+                    return null;
+                }
+            }
         }
     }
 }
