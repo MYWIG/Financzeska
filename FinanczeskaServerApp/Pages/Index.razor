@@ -5,51 +5,50 @@
 @inject ChatHistoryService _chatHistoryService;
 @inject IHttpContextAccessor _httpContextAccessor;
 
-<h3>PostTextContent</h3>
+<body>
+  <div class="container">
+    <div class="row">
 
-<div id="MainContainer " class="row">
 
-    <div class="col-2" style="background-color:#011520">
+      <section class="discussions">
+        <div class="discussion search">
 
-        @foreach (string item in chats)
-        {
-            <div>
-                @item
+        </div>
+
+
+
+        <div class="discussion message-active">
+          <div class="desc-contact">
+            <p class="name">Megan Leib</p>
+          </div>
+          <div class="timer">12 sec</div>
+        </div>
+
+
+      </section>
+      <section class="chat">
+
+        <div class="messages-chat">
+          <div class="message">
+
+            <p class="text"> Hi, how are you ? </p>
+          </div>
+
+          <div class="message text-only">
+            <div class="response">
+              <p class="text"> When can we meet ?</p>
             </div>
-        }
-
-    </div>
-
-    <div class="MessagesContainer col-8 offset-1" style="min-height:400px;">
-        <div class="QuestionContainer col-8">
-            @text
+          </div>
         </div>
-        <br />
-        <div class="AnswerContainer col-8">
-            @foreach (string value in new List<string>())
-            {
-                <div class="col-8">value</div>
-            }
+        <div class="footer-chat">
+          <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
+      @*     <input type="text" class="write-message" placeholder="Type your message here"></input> *@
+          <i class="icon send fa fa-paper-plane-o clickable" aria-hidden="true"></i>
         </div>
-        <br />
+      </section>
     </div>
-
-</div>
-
-
-
-<div class="row">
-    <div class="ChatText col-10">
-        @*make input text invisible*@
-        <input @bind="text" style="background: transparent;border: none;outline: none;height: 100%;" />
-    </div>
-    <div class="col-2 text-center">
-        <button class="SubmitButton" @onclick="Submit" type="submit">Submit</button>
-    </div>
-</div>
-
-
-
+  </div>
+</body>
 
 
 @code {
