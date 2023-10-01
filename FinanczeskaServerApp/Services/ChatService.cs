@@ -58,6 +58,9 @@ namespace FinanczeskaServerApp.Services
                 // create User Dir
                 string dir = Path.Combine(_webHostEnvironment.ContentRootPath, userId);
 
+                if(!Directory.Exists(dir))
+                    return new List<string>();
+
                 List<string> files = Directory.GetFiles(dir).ToList();
                 List<string> result = new List<string>();
 

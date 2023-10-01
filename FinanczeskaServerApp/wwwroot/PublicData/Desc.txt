@@ -1,3 +1,6 @@
 data1 - Pomockryzysowa2021ŻródłaPomocy 
 data2 - Struktura_zarejestrowanych_bezrobotnych_w_roku_2022
 data3 -Struktura_zarejestrowanych_oświadczeń_o_powierzeniu_pracy_cudzoziemcowi_w_roku_2022
+data4 -Struktura_osób_z_niepełnosprawnością_podejmujacych_pracę_w_roku_2022
+data5 - Struktura_pozyskanych_miejsc_pracy_w_roku_2022
+data6 - Struktura_wieku_osób_bezrobotnych_w_roku_2022
