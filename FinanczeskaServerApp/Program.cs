@@ -9,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<ChatHistoryService>();
 builder.Services.AddScoped<ChatService>();
 builder.Services.AddTransient<JsonDataSerializer>();
 builder.Services.AddTransient<ModelCallerService>();

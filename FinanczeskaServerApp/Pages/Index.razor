@@ -2,7 +2,7 @@
 @using Data;
 @using FinanczeskaServerApp.Services;
 @inject JsonDataSerializer _jsonDataSerializer;
-@inject ChatHistoryService _chatHistoryService;
+@inject ChatService _chatService;
 @inject ModelCallerService _modelCallerService;
 @inject IHttpContextAccessor _httpContextAccessor;
 
@@ -75,12 +75,24 @@
 
     protected override async Task OnInitializedAsync()
     {
-        string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-        if (clientIP.Equals("::1"))
-            clientIP = "localhost";
-        chats = _chatHistoryService.GetUserChatList(clientIP);
-        StateHasChanged();
+        try
+        {
+            string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            if (clientIP.Equals("::1"))
+                clientIP = "localhost";
+            chats = _chatService.GetUserChatList(clientIP);
+
+            messages = _chatService.GetChatHistory(clientIP, text);
+
+            StateHasChanged();
+
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
+
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -91,7 +103,7 @@
                 return;
             if (clientIP.Equals("::1"))
                 clientIP = "localhost";
-            chats = _chatHistoryService.GetUserChatList(clientIP);
+            chats = _chatService.GetUserChatList(clientIP);
 
             // execute conditionally for loading data, otherwise this will load
             // every time the page refreshes
@@ -116,11 +128,12 @@
 
 
         Message message = new Message(DateTime.Now, text, true);
-        var t = _jsonDataSerializer.SerializeToJson(clientIP, message);
+        bool humanResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, message);
         messages.Add(message);
 
         string resonse = await _modelCallerService.AskModel(clientIP, text);
         Message botResponseMessage = new Message(DateTime.Now, resonse, false);
+        bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, botResponseMessage);
         messages.Add(botResponseMessage);
 
 

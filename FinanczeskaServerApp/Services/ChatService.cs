@@ -1,6 +1,7 @@
 ﻿using FinanczeskaServerApp.Data;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace FinanczeskaServerApp.Services
 {
@@ -25,11 +26,18 @@ namespace FinanczeskaServerApp.Services
 
                 // read value of chat chatDirectory + .json
                 // Read the content of the chat file
-                string fileContent = File.ReadAllText(chatDirectory);
+                string filenPath = Path.Combine(chatDirectory, DateTime.Now.ToString("yyyy-MM-dd") + ".json");
+                if (!File.Exists(filenPath))
+                    return new List<Message>();
+                
+                FileInfo fileInfo = new FileInfo(filenPath);
+                if (fileInfo.Length == 0)
+                    return new List<Message>();
+
+                string fileContent = File.ReadAllText(Path.Combine(chatDirectory,DateTime.Now.ToString("yyyy-MM-dd") + ".json"));
 
                 // If the file contains a single string per line, you can split it into a list
                 List<Message> chatHistory = JsonConvert.DeserializeObject<List<Message>>(fileContent);
-                var t = chatHistory;
                 return chatHistory;
             }
             catch(Exception ex)
@@ -37,6 +45,34 @@ namespace FinanczeskaServerApp.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId">Ip Usera</param>
+        /// <returns></returns>
+        public List<string> GetUserChatList(string userId)
+        {
+            try
+            {
+                // create User Dir
+                string dir = Path.Combine(_webHostEnvironment.ContentRootPath, userId);
+
+                List<string> files = Directory.GetFiles(dir).ToList();
+                List<string> result = new List<string>();
+
+                foreach (string file in files)
+                    result.Add(Regex.Replace(file.ToLower(), ".json", string.Empty));
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
 
     }
 }
