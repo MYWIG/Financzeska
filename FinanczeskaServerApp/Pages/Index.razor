@@ -1,5 +1,5 @@
 ﻿@page "/"
-
+@using Data;
 @using FinanczeskaServerApp.Services;
 @inject JsonDataSerializer _jsonDataSerializer;
 @inject ChatHistoryService _chatHistoryService;
@@ -16,34 +16,45 @@
         </div>
 
 
-
-        <div class="discussion message-active">
-          <div class="desc-contact">
-            <p class="name">Megan Leib</p>
-          </div>
-          <div class="timer">12 sec</div>
-        </div>
+        @foreach(var item in chats){
+            <div class="discussion message-active">
+              <div class="desc-contact">
+                <p class="name">item</p>
+              </div>
+              <div class="timer">12 sec</div>
+            </div>
+        }
 
 
       </section>
       <section class="chat">
 
         <div class="messages-chat">
-          <div class="message">
 
-            <p class="text"> Hi, how are you ? </p>
-          </div>
 
-          <div class="message text-only">
-            <div class="response">
-              <p class="text"> When can we meet ?</p>
-            </div>
-          </div>
+            @foreach (var message in messages)
+            {
+                @if (message.IsRequest)
+                {
+                    <div class="message">
+                        <p class="text">@message.Text</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="message text-only">
+                        <div class="response">
+                            <p class="text">@message.Text</p>
+                        </div>
+                    </div>
+                }
+
+            }
+
         </div>
         <div class="footer-chat">
-          <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
-      @*     <input type="text" class="write-message" placeholder="Type your message here"></input> *@
-          <i class="icon send fa fa-paper-plane-o clickable" aria-hidden="true"></i>
+          <input type="text" class="write-message" placeholder="Type your message here" @bind="text"/>
+          <button  @onclick="Submit" >Submit</button>
         </div>
       </section>
     </div>
@@ -53,24 +64,33 @@
 
 @code {
     private string text = "";
-    List<string> chats = new List<string>() { "Test1", "Test2", "Test3" };
+    List<string> chats;
+    List<Message> messages = new List<Message>() 
+    { 
+        new Message(DateTime.Now, "Test1", true), 
+        new Message(DateTime.Now, "Test2", false), 
+        new Message(DateTime.Now, "Test2", true) 
+    };
 
     protected override async Task OnInitializedAsync()
     {
-        // string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-        // if (clientIP.Equals("::1"))
-        //     clientIP = "localhost";
-        // chats = _chatHistoryService.GetUserChatList(clientIP);
+        string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        if (clientIP.Equals("::1"))
+            clientIP = "localhost";
+        chats = _chatHistoryService.GetUserChatList(clientIP);
+        StateHasChanged();
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         try
         {
-            // string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-            // if (clientIP.Equals("::1"))
-            //     clientIP = "localhost";
-            // chats = _chatHistoryService.GetUserChatList(clientIP);
+            string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            if (clientIP == null)
+                return;
+            if (clientIP.Equals("::1"))
+                clientIP = "localhost";
+            chats = _chatHistoryService.GetUserChatList(clientIP);
 
             // execute conditionally for loading data, otherwise this will load
             // every time the page refreshes
@@ -78,10 +98,11 @@
             {
                 // Do work to load page data and set properties
             }
+            StateHasChanged();
         }
         catch(Exception ex)
         {
-            
+
         }
 
     }
@@ -92,8 +113,11 @@
         if (clientIP == null)
             clientIP = "undefinded";
 
-        var t = _jsonDataSerializer.SerializeToJson(clientIP, text);
-        
+
+        Message message = new Message(DateTime.Now, text, true);
+        var t = _jsonDataSerializer.SerializeToJson(clientIP, message);
+        messages.Add(message);
+        StateHasChanged();
     }
 
 }

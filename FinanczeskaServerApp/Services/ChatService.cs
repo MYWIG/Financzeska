@@ -21,7 +21,7 @@ namespace FinanczeskaServerApp.Services
                 // Specify the directory where chat history files are stored
                 string chatDirectory = Path.Combine(_webHostEnvironment.ContentRootPath, userId);
                 if(!Directory.Exists(chatDirectory))
-                    return new List<Message>(){ new Message(DateTime.Now, "Error") };
+                    return new List<Message>(){ new Message(DateTime.Now, "Error", false) };
 
                 // read value of chat chatDirectory + .json
                 // Read the content of the chat file

@@ -15,14 +15,13 @@ namespace FinanczeskaServerApp.Services
         }
 
         //method for serializing data to json
-        public bool SerializeToJson(string id, string text)
+        public bool SerializeToJson(string id, Message value)
         {
             try
             {
                 if (id.Equals("::1"))
                     id = "localhost";
 
-                Message value = new(DateTime.Now, text);
 
                 var json = System.Text.Json.JsonSerializer.Serialize(value);
 
