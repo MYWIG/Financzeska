@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FinanczeskaServerApp", "Fin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csvParser", "..\csvParser\csvParser.csproj", "{D01F2D2D-379C-406D-BAD0-5F21AE3FD797}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp2", "..\BlazorApp2\BlazorApp2.csproj", "{64179638-AA58-4AA3-869E-D649B9BA6EB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D01F2D2D-379C-406D-BAD0-5F21AE3FD797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D01F2D2D-379C-406D-BAD0-5F21AE3FD797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D01F2D2D-379C-406D-BAD0-5F21AE3FD797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64179638-AA58-4AA3-869E-D649B9BA6EB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64179638-AA58-4AA3-869E-D649B9BA6EB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64179638-AA58-4AA3-869E-D649B9BA6EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64179638-AA58-4AA3-869E-D649B9BA6EB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
