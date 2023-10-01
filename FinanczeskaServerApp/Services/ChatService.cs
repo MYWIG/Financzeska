@@ -36,7 +36,7 @@ namespace FinanczeskaServerApp.Services
                 if (fileInfo.Length == 0)
                     return new List<Message>();
 
-                string fileContent = File.ReadAllText(Path.Combine(chatDirectory,DateTime.Now.ToString("yyyy-MM-dd") + ".json"));
+                string fileContent = File.ReadAllText(Path.Combine(chatDirectory, chat.Name + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".json"));
 
                 // If the file contains a single string per line, you can split it into a list
                 List<Message> chatHistory = JsonConvert.DeserializeObject<List<Message>>(fileContent);
