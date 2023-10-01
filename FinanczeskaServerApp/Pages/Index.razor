@@ -68,8 +68,8 @@
                         }
                     </p>
                 </div>
-               
-        <div class="messages-chat" style=" padding: 25px 35px 10px 10px;">
+
+                <div class="messages-chat" style="margin-bottom: 3em;">
                     @if (messages.Count == 0 && selectedBot == null)
                     {
                         <div class="message, text">
@@ -113,7 +113,7 @@
             }
 
         </div>
-        <div class="footer-chat">
+                <div class="footer-chat" style="background-color: #fff;">
           <input id="textImput" type="text" class="write-message" placeholder="Type your message here" @bind="text"/>
             <button id="chatSubmit" @onclick="Submit" >
                 Submit
