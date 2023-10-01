@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using FinanczeskaServerApp.Data;
+using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json;
 using System.Reflection.Metadata.Ecma335;
 
 namespace FinanczeskaServerApp.Services
 {
     public class JsonDataSerializer
     {
-
         private readonly IWebHostEnvironment _environment;
 
         public JsonDataSerializer(IWebHostEnvironment environment)
@@ -14,21 +15,13 @@ namespace FinanczeskaServerApp.Services
         }
 
         //method for serializing data to json
-        public bool SerializeToJson(string id, string text)
+        public bool SerializeToJson(string id, Message value)
         {
             try
             {
                 if (id.Equals("::1"))
-                {
                     id = "localhost";
-                }
 
-                object value =
-                new
-                {
-                    Splitter = DateTime.Now.ToString("yyyy.MM.dd HH:mm:ss"),
-                    Text = text,
-                };
 
                 var json = System.Text.Json.JsonSerializer.Serialize(value);
 
@@ -43,14 +36,20 @@ namespace FinanczeskaServerApp.Services
                 if (!File.Exists(filePath))
                     File.Create(filePath);
 
-                // Create a StreamWriter to write to the file
-                using (StreamWriter writer = new StreamWriter(filePath))
+                List<Message> data = new List<Message>();
+                if (File.Exists(filePath))
                 {
-                    // Write the serialized string to the file
-                    writer.Write(json);
+                    FileInfo fileInfo = new FileInfo(filePath);
+                    if (fileInfo.Length > 0)
+                        data = JsonConvert.DeserializeObject<List<Message>>(File.ReadAllText(filePath));
                 }
 
-                ////fileStream(filePath, json);
+                // Append the new JSON string to the existing content
+                data.Add(value);
+
+                // Write the updated content back to the file
+                File.WriteAllText(filePath, System.Text.Json.JsonSerializer.Serialize(data));
+
                 return true;
             }
             catch (Exception ex)

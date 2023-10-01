@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ChatHistoryService>();
+builder.Services.AddScoped<ChatService>();
 builder.Services.AddTransient<JsonDataSerializer>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 

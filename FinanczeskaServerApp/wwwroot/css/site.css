@@ -73,12 +73,14 @@ a, .btn-link {
 /*   Index Files*/
 
 .QuestionContainer {
-    background: #D7D7D7;
+    margin-top:20px;
+    background: #3187AB;
     border-radius: 20px;
     padding-left: 10px;
 }
 
 .AnswerContainer {
+    margin-top: 20px;
     background: #448251;
     border-radius: 20px;
     padding-left: 10px;
