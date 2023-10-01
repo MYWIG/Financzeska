@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using FinanczeskaServerApp.Data;
+using System.Text;
+using System.Text.Json;
 
 namespace FinanczeskaServerApp.Services
 {
@@ -121,10 +123,15 @@ namespace FinanczeskaServerApp.Services
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
                 // Define the text pattern to parse
-
+                    
                 // Use 
-                return apiResponse;
+         
 
+                RootObject rootObject = JsonSerializer.Deserialize<RootObject>(apiResponse);
+
+                // Access the strongly typed data
+                string text = rootObject.results[0].text;
+                return "";
             }
             catch (Exception ex)
             {
