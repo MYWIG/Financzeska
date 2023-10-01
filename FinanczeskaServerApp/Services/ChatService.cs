@@ -26,7 +26,7 @@ namespace FinanczeskaServerApp.Services
 
                 // read value of chat chatDirectory + .json
                 // Read the content of the chat file
-                string filenPath = Path.Combine(chatDirectory, DateTime.Now.ToString("yyyy-MM-dd") + ".json");
+                string filenPath = Path.Combine(chatDirectory, chat + ".json");
                 if (!File.Exists(filenPath))
                     return new List<Message>();
                 
