@@ -48,19 +48,19 @@
                                 <span>Informacja o pomocy kryzysowej</span>
                                 break;
                             case 2:
-                                <span>Bot 2</span>
+                                <span>Informacja dotyczjąca bezrobocia</span>
                                 break;
                             case 3:
-                                <span>Bot 3</span>
+                                <span>Raport 2022 o zatrudnieniu cudzoziemców</span>
                                 break;
                             case 4:
-                                <span>Bot 4</span>
+                                <span>Zatrudnienie niepełnosprawnych w 2022 roku.</span>
                                 break;
                             case 5:
-                                <span>Bot 5</span>
+                                <span>Ilość zarejestrowanych miejsc pracy w 2022 roku.</span>
                                 break;
                             case 6:
-                                <span>Bot 6</span>
+                                <span>Rozkład wieku bezrobotnych w 2022 roku.</span>
                                 break;
                             default:
                                 <span>Unknown Bot</span>
@@ -69,22 +69,22 @@
                     </p>
                 </div>
                
-        <div class="messages-chat">
+        <div class="messages-chat" style=" padding: 25px 35px 10px 10px;">
                     @if (messages.Count == 0 && selectedBot == null)
                     {
                         <div class="message, text">
                             <p >Prosze wybrać bota, z którym mozna prowadzić rozmowe na temat finansowy albo statystyczny: </p>
                             <p>Informacja o pomocy kryzysowej </p>
                             <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(1);} )"></button>
-                            <p>Struktura_zarejestrowanych_bezrobotnych_w_roku_2022 </p>
+                            <p>Informacja dotyczjąca bezrobocia </p>
                             <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(2);} )"></button>
-                            <p>Struktura_zarejestrowanych_oświadczeń_o_powierzeniu_pracy_cudzoziemcowi_w_roku_2022</p>
+                            <p>Raport 2022 o zatrudnieniu cudzoziemców</p>
                             <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(3);} )"></button>
-                            <p>Struktura_osób_z_niepełnosprawnością_podejmujacych_pracę_w_roku_2022 </p>
+                            <p>Zatrudnienie niepełnosprawnych w 2022 roku. </p>
                             <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(4);} )"></button>
-                            <p>Struktura_pozyskanych_miejsc_pracy_w_roku_2022 </p>
+                            <p>Ilość zarejestrowanych miejsc pracy w 2022 roku. </p>
                             <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(5);} )"></button>
-                            <p>Struktura_wieku_osób_bezrobotnych_w_roku_2022 </p>
+                            <p>Rozkład wieku bezrobotnych w 2022 roku. </p>
                             <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(6);} )"></button>
                         </div> 
                     }
@@ -97,13 +97,13 @@
             {
                 @if (message.IsRequest)
                 {
-                    <div class="message">
+                    <div class="message" >
                         <p class="text">@message.Text</p>
                     </div>
                 }
                 else
                 {
-                    <div class="message text-only">
+                    <div class="message text-only " >
                         <div class="response">
                             <p class="text">@message.Text</p>
                         </div>
