@@ -13,13 +13,13 @@ namespace csvParser
         {
             // Define the API endpoint URL
             string apiUrl = "http://46.170.221.65:5001/api/v1/generate";
-            string filePath = "E:\\Downloads\\Pomockryzysowa2021ŻródłaPomocy.csv";
+            string filePath = "E:\\Downloads\\Struktura_zarejestrowanych_bezrobotnych_w_roku_2022.csv";
 
             try
             {
                 string formattedCsv = ParseCsvAndFormat(filePath);
 
-                string clientMessege = "Ile pieniedzy w srodkach zagranicznych?";
+                string clientMessege = "Ile bezrobotnych bylo w drugim kwartale?";
 
                 // Define the JSON data to send to the server
                 string jsonData = $@"{{
@@ -67,8 +67,8 @@ namespace csvParser
             // Read all text from the CSV file
             string csvText = File.ReadAllText(filePath);
 
-            // Remove tabulations (tab characters) using regex
-            string cleanedCsv = Regex.Replace(csvText, @"\t", "");
+            // Replace semicolons with periods and remove tabulations (tab characters)
+            string cleanedCsv = csvText.Replace(';', '.').Replace("\t", "");
 
             // Replace '\r\n' (carriage return and newline) with a dot
             cleanedCsv = cleanedCsv.Replace("\r\n", ". ");
