@@ -37,9 +37,9 @@
 
 
       </section>
-      <section class="chat" >
+            <section class="chat" style="padding: 0px 0px;">
 
-                <div class="alert alert-primary" style="background-color: #dee5f5; border-color: #60728b; text-align: center;     margin: 0 70px;">
+                <div class="alert alert-primary" style="background-color: #dee5f5; border-color: #60728b; text-align: center;     margin: 0 2.3em;">
                     <p style="font-size: 24px;">
                      
                         @switch (selectedBot)
@@ -69,23 +69,23 @@
                     </p>
                 </div>
 
-                <div class="messages-chat" style="margin-bottom: 3em;">
+                <div class="messages-chat" style="margin-bottom: 3em; padding: 0px 0px;">
                     @if (messages.Count == 0 && selectedBot == null)
                     {
                         <div class="message, text">
-                            <p >Prosze wybrać bota, z którym mozna prowadzić rozmowe na temat finansowy albo statystyczny: </p>
-                            <p>Informacja o pomocy kryzysowej </p>
-                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(1);} )"></button>
-                            <p>Informacja dotyczjąca bezrobocia </p>
-                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(2);} )"></button>
-                            <p>Raport 2022 o zatrudnieniu cudzoziemców</p>
-                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(3);} )"></button>
-                            <p>Zatrudnienie niepełnosprawnych w 2022 roku. </p>
-                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(4);} )"></button>
-                            <p>Ilość zarejestrowanych miejsc pracy w 2022 roku. </p>
-                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(5);} )"></button>
-                            <p>Rozkład wieku bezrobotnych w 2022 roku. </p>
-                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(6);} )"></button>
+                            <p style="margin-bottom: -0.0em;">Prosze wybrać bota, z którym mozna prowadzić rozmowe na temat finansowy albo statystyczny: </p>
+                            <p style ="margin-bottom: -0.0em;">Informacja o pomocy kryzysowej </p>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(1);} )">Wybierz</button>
+                            <p style="margin-bottom: -0.0em;">Informacja dotyczjąca bezrobocia </p>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(2);} )">Wybierz</button>
+                            <p style="margin-bottom: -0.0em;">Raport 2022 o zatrudnieniu cudzoziemców</p>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(3);} )">Wybierz</button>
+                            <p style="margin-bottom: -0.0em;">Zatrudnienie niepełnosprawnych w 2022 roku. </p>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(4);} )">Wybierz</button>
+                            <p style="margin-bottom: -0.0em;">Ilość zarejestrowanych miejsc pracy w 2022 roku. </p>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(5);} )">Wybierz</button>
+                            <p style="margin-bottom: -0.0em;">Rozkład wieku bezrobotnych w 2022 roku. </p>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(6);} )">Wybierz</button>
                         </div> 
                     }
                     else
