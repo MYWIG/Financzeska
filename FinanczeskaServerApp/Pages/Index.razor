@@ -96,6 +96,7 @@
 
 
 @code {
+    int selectedBot;
     string currentConversation;
     bool firstRender;
     private string text = "";
@@ -140,7 +141,7 @@
             if (clientIP.Equals("::1"))
                 clientIP = "localhost";
 
-
+            selectedBot = idOfDataFile;
 
             StateHasChanged();
 
@@ -151,7 +152,6 @@
         }
     }
 
-    protected async Task OnClickChangeChat(string name)
     protected async Task OnClickChangeChat(Chat chat)
     {
         try
@@ -238,7 +238,7 @@
         bool humanResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP,currentConversation, message);
         messages.Add(message);
 
-        string resonse = await _modelCallerService.AskModel(clientIP, text);
+        string resonse = await _modelCallerService.AskModel(clientIP, text, selectedBot);
         Message botResponseMessage = new Message(DateTime.Now, resonse, false);
         bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP,currentConversation, botResponseMessage);
         messages.Add(botResponseMessage);

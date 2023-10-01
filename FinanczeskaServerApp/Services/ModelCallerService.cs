@@ -70,7 +70,7 @@ namespace FinanczeskaServerApp.Services
         /// <param name="userId"></param>
         /// <param name="UserInputData"></param>
         /// <returns></returns>
-        public async Task<string> AskModel(string userId, string userInputData)
+        public async Task<string> AskModel(string userId, string userInputData, int valueToSelect)
         {
             try
             {
@@ -80,7 +80,6 @@ namespace FinanczeskaServerApp.Services
 
                 string dataFile;
                 // mock Temporary
-                int valueToSelect = 1;
                 dataFile = "data" + valueToSelect.ToString() + ".csv";
 
 
