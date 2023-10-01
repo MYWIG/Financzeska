@@ -104,7 +104,7 @@ namespace FinanczeskaServerApp.Services
                     ""top_a"": 0,
                     ""typical"": 1,
                     ""tfs"": 1,
-                    ""rep_pen_range"": 320,
+                    ""rep_pen_range"": 100,
                     ""rep_pen_slope"": 0.7,
                     ""sampler_order"": [6, 0, 1, 3, 4, 2, 5],
                     ""prompt"": ""[Twoje zachowanie: jesteś asystentem, nie zadajesz pytania, jesteś precyzyjny, twój temat to finansy oraz bankowość, inne tematy ignorujesz, odpowiadasz nie więcej, niż 15 słów, nie przeklinasz i jesteś grzeczny, nie razmawiasz na tematy nie związane z pytaniem.  {formattedCsv}]\n\n{clientMessege}"",
