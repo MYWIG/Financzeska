@@ -129,7 +129,7 @@
 
 
 @code {
-    
+
     string sounrRecordError = "Nagranie Głosu";
     int? selectedBot;
     Chat currentConversation;
@@ -227,6 +227,8 @@
                 return;
 
             // await OnClickChangeChat(Newchat);
+
+            selectedBot = null;
 
             // create Chat
             await _chatService.CreateNewChat(clientIP);
