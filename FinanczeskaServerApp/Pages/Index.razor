@@ -17,15 +17,23 @@
         </div>
 
 
-        @foreach(var item in chats){
-                    <div class="discussion message-active" @onclick="( async () => { await OnClickChangeChat(item);} )">
-              <div class="desc-contact" >
- 
-                <p class="name">@item</p>
-              </div>
-              <div class="timer">12 sec</div>
-            </div>
+        <div>
+            <button id="CreateNewChat" @onclick="OnCreateNewChatClick"  >create New Chat</button>
+        </div>
+
+        @if(chats!= null){
+            @foreach (var item in chats)
+            {
+                <div class="discussion message-active" @onclick="( async () => { await OnClickChangeChat(item);} )">
+                    <div class="desc-contact">
+
+                        <p class="name"> Session : @item.Name</p>
+                    </div>
+                    <div class="timer"> Date : @DateTime.Now.ToString("yyyy.MM.dd") </div>
+                </div>
+            }
         }
+
 
 
       </section>
@@ -67,13 +75,15 @@
 
 
 @code {
+    string currentConversation;
+    bool firstRender;
     private string text = "";
-    List<string> chats;
+    List<Chat> chats;
     List<Message> messages = new List<Message>() 
     { 
-        new Message(DateTime.Now, "Test1", true), 
-        new Message(DateTime.Now, "Test2", false), 
-        new Message(DateTime.Now, "Test2", true) 
+        // new Message(DateTime.Now, "Test1", true), 
+        // new Message(DateTime.Now, "Test2", false), 
+        // new Message(DateTime.Now, "Test2", true) 
     };
 
     protected override async Task OnInitializedAsync()
@@ -85,7 +95,12 @@
                 clientIP = "localhost";
             chats = _chatService.GetUserChatList(clientIP);
 
-            messages = _chatService.GetChatHistory(clientIP, text);
+            if (chats.Count > 0)
+            {
+                Chat defaultChat = chats.First();
+
+                messages = _chatService.GetChatHistory(clientIP, defaultChat);
+            }
 
             StateHasChanged();
 
@@ -96,7 +111,7 @@
         }
     }
 
-    protected async Task OnClickChangeChat(string name)
+    protected async Task OnClickChangeChat(Chat chat)
     {
         try
         {
@@ -104,15 +119,43 @@
             if (clientIP.Equals("::1"))
                 clientIP = "localhost";
 
-            messages = _chatService.GetChatHistory(clientIP, name);
+            messages = _chatService.GetChatHistory(clientIP, chat);
 
-
+            currentConversation = chat.Name;
             StateHasChanged();
 
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Create chat
+    /// </summary>
+    public async void OnCreateNewChatClick()
+    {
+        try
+        {
+            Guid guid = Guid.NewGuid();
+            Chat Newchat = new Chat(guid.ToString(), DateOnly.FromDateTime(DateTime.Now.Date));
+            string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            if (clientIP == null)
+                return;
+
+            // await OnClickChangeChat(Newchat);
+            
+            // create Chat
+            await _chatService.CreateNewChat(clientIP);
+
+            // REfresz chat list
+            chats = _chatService.GetUserChatList(clientIP);
+            StateHasChanged();
+        }
+        catch(Exception ex)
+        {
+            
         }
     }
 
@@ -151,12 +194,12 @@
 
 
         Message message = new Message(DateTime.Now, text, true);
-        bool humanResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, message);
+        bool humanResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP,currentConversation, message);
         messages.Add(message);
 
         string resonse = await _modelCallerService.AskModel(clientIP, text);
         Message botResponseMessage = new Message(DateTime.Now, resonse, false);
-        bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, botResponseMessage);
+        bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP,currentConversation, botResponseMessage);
         messages.Add(botResponseMessage);
 
 

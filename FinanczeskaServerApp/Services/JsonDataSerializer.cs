@@ -15,23 +15,23 @@ namespace FinanczeskaServerApp.Services
         }
 
         //method for serializing data to json
-        public bool SerializeToJson(string id, Message value)
+        public bool SerializeToJson(string ip, string currentConversation, Message value)
         {
             try
             {
-                if (id.Equals("::1"))
-                    id = "localhost";
+                if (ip.Equals("::1"))
+                    ip = "localhost";
 
 
                 var json = System.Text.Json.JsonSerializer.Serialize(value);
 
                 // create User Dir
-                string dir = Path.Combine(_environment.ContentRootPath, id);
+                string dir = Path.Combine(_environment.ContentRootPath, ip);
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
-                //create Todays File
-                string filePath = Path.Combine(dir, $"{DateTime.Now:yyyy-MM-dd}.json");
+                // Todays File
+                string filePath = Path.Combine(dir, $"{currentConversation}-{DateTime.Now:yyyy-MM-dd}.json");
 
                 if (!File.Exists(filePath))
                     File.Create(filePath);
