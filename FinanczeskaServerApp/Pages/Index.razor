@@ -39,12 +39,42 @@
       </section>
       <section class="chat" >
 
+                <div class="alert alert-primary" style="background-color: #dee5f5; border-color: #60728b; text-align: center;     margin: 0 70px;">
+                    <p style="font-size: 24px;">
+                     
+                        @switch (selectedBot)
+                        {
+                            case 1:
+                                <span>Informacja o pomocy kryzysowej</span>
+                                break;
+                            case 2:
+                                <span>Bot 2</span>
+                                break;
+                            case 3:
+                                <span>Bot 3</span>
+                                break;
+                            case 4:
+                                <span>Bot 4</span>
+                                break;
+                            case 5:
+                                <span>Bot 5</span>
+                                break;
+                            case 6:
+                                <span>Bot 6</span>
+                                break;
+                            default:
+                                <span>Unknown Bot</span>
+                                break;
+                        }
+                    </p>
+                </div>
+               
         <div class="messages-chat">
                     @if (messages.Count == 0 && selectedBot == null)
                     {
                         <div class="message, text">
                             <p >Prosze wybrać bota, z którym mozna prowadzić rozmowe na temat finansowy albo statystyczny: </p>
-                            <p>Pomockryzysowa2021ŻródłaPomocy </p>
+                            <p>Informacja o pomocy kryzysowej </p>
                             <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(1);} )"></button>
                             <p>Struktura_zarejestrowanych_bezrobotnych_w_roku_2022 </p>
                             <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(2);} )"></button>
