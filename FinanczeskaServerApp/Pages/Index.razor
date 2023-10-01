@@ -40,7 +40,28 @@
       <section class="chat" >
 
         <div class="messages-chat">
-
+                    @if (messages.Count == 0)
+                    {
+                        <div class="message, text">
+                            <p >Prosze wybrać bota, z którym mozna prowadzić rozmowe na temat finansowy albo statystyczny: </p>
+                            <p >Wiek bezrobotnych w 2022 roku </p>
+                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(1);} )"></button>
+                            <p >Statystyka pozyskane miejsca pracy w 2022 roku </p>
+                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(2);} )"></button>
+                            <p >Bezrobocie wśród niepełnosprawnych </p>
+                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(3);} )"></button>
+                            <p >Powierzenie pracy cudzoziemcom </p>
+                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(4);} )"></button>
+                            <p >Pomoc Kryzysowa - Źródła Pomocy </p>
+                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(5);} )"></button>
+                            <p >Ewidencja bezrobotnych za 2022 rok </p>
+                            <button style="border-radius: 10px 10px 10px 10px;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(6);} )"></button>
+                        </div> 
+                    }
+                    else
+                    {
+                        <p>Wybrany zostal bot </p>
+                    }
 
             @foreach (var message in messages)
             {
@@ -111,6 +132,26 @@
         }
     }
 
+    protected async Task OnClickChangeData(int idOfDataFile)
+    {
+        try
+        {
+            string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            if (clientIP.Equals("::1"))
+                clientIP = "localhost";
+
+
+
+            StateHasChanged();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    protected async Task OnClickChangeChat(string name)
     protected async Task OnClickChangeChat(Chat chat)
     {
         try
