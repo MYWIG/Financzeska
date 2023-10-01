@@ -12,6 +12,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ChatHistoryService>();
 builder.Services.AddScoped<ChatService>();
 builder.Services.AddTransient<JsonDataSerializer>();
+builder.Services.AddTransient<ModelCallerService>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 

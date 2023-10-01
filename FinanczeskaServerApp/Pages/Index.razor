@@ -3,6 +3,7 @@
 @using FinanczeskaServerApp.Services;
 @inject JsonDataSerializer _jsonDataSerializer;
 @inject ChatHistoryService _chatHistoryService;
+@inject ModelCallerService _modelCallerService;
 @inject IHttpContextAccessor _httpContextAccessor;
 
 <body>
@@ -107,7 +108,7 @@
 
     }
 
-    private void Submit()
+    private async Task Submit()
     {
         string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
         if (clientIP == null)
@@ -117,6 +118,12 @@
         Message message = new Message(DateTime.Now, text, true);
         var t = _jsonDataSerializer.SerializeToJson(clientIP, message);
         messages.Add(message);
+
+        string resonse = await _modelCallerService.AskModel(clientIP, text);
+        Message botResponseMessage = new Message(DateTime.Now, resonse, false);
+        messages.Add(botResponseMessage);
+
+
         StateHasChanged();
     }
 
