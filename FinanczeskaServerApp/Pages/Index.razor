@@ -85,9 +85,12 @@
         </div>
         <div class="footer-chat">
           <input id="textImput" type="text" class="write-message" placeholder="Type your message here" @bind="text"/>
-                    <button id="chatSubmit" @onclick="Submit" >
-                        Submit
-                    </button>
+            <button id="chatSubmit" @onclick="Submit" >
+                Submit
+            </button>
+            <button id="VoiceRecord" @onclick="VoiceRecord">
+                @sounrRecordError
+            </button>
         </div>
       </section>
     </div>
@@ -96,6 +99,7 @@
 
 
 @code {
+    string sounrRecordError = "Nagranie Głosu";
     int selectedBot;
     string currentConversation;
     bool firstRender;
@@ -112,6 +116,7 @@
     {
         try
         {
+            selectedBot = 1;
             string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
             if (clientIP.Equals("::1"))
                 clientIP = "localhost";
@@ -186,7 +191,7 @@
                 return;
 
             // await OnClickChangeChat(Newchat);
-            
+
             // create Chat
             await _chatService.CreateNewChat(clientIP);
 
@@ -196,7 +201,7 @@
         }
         catch(Exception ex)
         {
-            
+
         }
     }
 
@@ -246,5 +251,13 @@
 
         StateHasChanged();
     }
+
+    public void VoiceRecord()
+    {
+        sounrRecordError = "Nie działa nagrywanie Głosa";
+        
+    }
+
+    
 
 }
