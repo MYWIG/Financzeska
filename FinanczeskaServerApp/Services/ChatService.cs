@@ -16,35 +16,38 @@ namespace FinanczeskaServerApp.Services
             _webHostEnvironment = webHostEnvironment ?? throw new ArgumentNullException(nameof(webHostEnvironment));
         }
 
-        public List<Message> GetChatHistory(string userId, Chat chat)
+        public ChatHistory GetChatHistory(string userId, Chat chat)
         {
             try
             {
 
                 // Specify the directory where chat history files are stored    
                 string chatDirectory = Path.Combine(_webHostEnvironment.ContentRootPath + "Chats", userId);
-                if(!Directory.Exists(chatDirectory))
-                    return new List<Message>(){ new Message(DateTime.Now, "Error", false) };
+                if (!Directory.Exists(chatDirectory))
+                {
+                    List<Message> list = new List<Message>() { new Message(DateTime.Now, "Error", false) };
+                    return new ChatHistory(null, list);
+                }
 
                 // read value of chat chatDirectory + .json
                 // Read the content of the chat file
                 string filenPath = Path.Combine(chatDirectory, chat.Name + "_" + chat.DateOnly.ToString("yyyy-MM-dd") + ".json");
                 if (!File.Exists(filenPath))
-                    return new List<Message>();
-                
+                    return new ChatHistory(null, new List<Message>());
+
                 FileInfo fileInfo = new FileInfo(filenPath);
                 if (fileInfo.Length == 0)
-                    return new List<Message>();
+                    return new ChatHistory(null, new List<Message>());
 
                 string fileContent = File.ReadAllText(Path.Combine(chatDirectory, chat.Name + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".json"));
 
                 // If the file contains a single string per line, you can split it into a list
-                List<Message> chatHistory = JsonConvert.DeserializeObject<List<Message>>(fileContent);
+                ChatHistory chatHistory = JsonConvert.DeserializeObject<ChatHistory>(fileContent);
                 return chatHistory;
             }
             catch(Exception ex)
             {
-                return new List<Message>() { new Message(DateTime.Now, "Error during ftech", true)  };
+                return new ChatHistory(null, new List<Message>() { new Message(DateTime.Now, "Error during ftech", true) }); 
             }
         }
 

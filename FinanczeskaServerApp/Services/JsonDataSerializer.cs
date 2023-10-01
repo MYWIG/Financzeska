@@ -15,15 +15,15 @@ namespace FinanczeskaServerApp.Services
         }
 
         //method for serializing data to json
-        public bool SerializeToJson(string ip, Chat currentConversation, Message value)
+        public bool SerializeToJson(string ip, Chat currentConversation, Message value, int botType)
         {
             try
             {
                 if (ip.Equals("::1"))
                     ip = "localhost";
 
-
-                var json = System.Text.Json.JsonSerializer.Serialize(value);
+                ChatHistory data = new ChatHistory(botType, new List<Message>() { value });
+                var json = System.Text.Json.JsonSerializer.Serialize(data);
 
                 // create User Dir
                 string dir = Path.Combine(_environment.ContentRootPath+ "Chats", ip);
@@ -36,16 +36,19 @@ namespace FinanczeskaServerApp.Services
                 if (!File.Exists(filePath))
                     File.Create(filePath);
 
-                List<Message> data = new List<Message>();
+                data = new ChatHistory(botType, null);
                 if (File.Exists(filePath))
                 {
                     FileInfo fileInfo = new FileInfo(filePath);
                     if (fileInfo.Length > 0)
-                        data = JsonConvert.DeserializeObject<List<Message>>(File.ReadAllText(filePath));
+                    {
+                        data = JsonConvert.DeserializeObject<ChatHistory>(File.ReadAllText(filePath));
+                    }
                 }
 
                 // Append the new JSON string to the existing content
-                data.Add(value);
+                data.Messages.Add(value);
+                data.BotType = botType;
 
                 // Write the updated content back to the file
                 File.WriteAllText(filePath, System.Text.Json.JsonSerializer.Serialize(data));

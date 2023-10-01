@@ -42,7 +42,7 @@
                 <div class="alert alert-primary" style="background-color: #dee5f5; border-color: #60728b; text-align: center;     margin: 0 2.3em;">
                     <p style="font-size: 24px;">
                      
-                        @switch (selectedBot)
+                        @switch (chatHistory.BotType)
                         {
                             case 1:
                                 <span>Informacja o pomocy kryzysowej</span>
@@ -69,31 +69,35 @@
                     </p>
                 </div>
 
-                <div class="messages-chat" style="margin-bottom: 3em; padding: 0px 0px;">
-                    @if (messages.Count == 0 && selectedBot == null)
+
+                 <div class="messages-chat" style="margin-bottom: 3em; padding: 0px 0px;">
+                    @if (chatHistory.Messages.Count == 0 && selectedBot == null)
                     {
                         <div class="message, text">
+                            <p>Prosze wybrać bota, z którym mozna prowadzić rozmowe na temat finansowy albo statystyczny: </p>
                             <p style="margin-bottom: -0.0em;">Prosze wybrać bota, z którym mozna prowadzić rozmowe na temat finansowy albo statystyczny: </p>
                             <p style ="margin-bottom: -0.0em;">Informacja o pomocy kryzysowej </p>
-                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(1);} )">Wybierz</button>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeBotType(1);} )">Wybierz</button>
                             <p style="margin-bottom: -0.0em;">Informacja dotyczjąca bezrobocia </p>
-                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(2);} )">Wybierz</button>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeBotType(2);} )">Wybierz</button>
                             <p style="margin-bottom: -0.0em;">Raport 2022 o zatrudnieniu cudzoziemców</p>
-                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(3);} )">Wybierz</button>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeBotType(3);} )">Wybierz</button>
                             <p style="margin-bottom: -0.0em;">Zatrudnienie niepełnosprawnych w 2022 roku. </p>
-                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(4);} )">Wybierz</button>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeBotType(4);} )">Wybierz</button>
                             <p style="margin-bottom: -0.0em;">Ilość zarejestrowanych miejsc pracy w 2022 roku. </p>
-                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(5);} )">Wybierz</button>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeBotType(5);} )">Wybierz</button>
                             <p style="margin-bottom: -0.0em;">Rozkład wieku bezrobotnych w 2022 roku. </p>
-                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeData(6);} )">Wybierz</button>
+                            <button style="border-radius: 10px 10px 10px 10px; margin-bottom: 0.6em;" id="chatSubmit" @onclick="( async () => { await OnClickChangeBotType(6);} )">Wybierz</button>
+                            
+                            
                         </div> 
                     }
-                    else
+@*                     else
                     {
-                        
-                    }
+                        <p>Wybrany zostal bot </p>
+                    } *@
 
-            @foreach (var message in messages)
+            @foreach (var message in chatHistory.Messages)
             {
                 @if (message.IsRequest)
                 {
@@ -115,9 +119,24 @@
         </div>
                 <div class="footer-chat" style="background-color: #fff;">
           <input id="textImput" type="text" class="write-message" placeholder="Type your message here" @bind="text"/>
-            <button id="chatSubmit" @onclick="Submit" >
+
+          @if(submitDisabled){
+            <button id="chatSubmit" style="background-color:gray" >
+                Oczekiwanie odpowiedzi Ai
+            </button>
+          }
+          else
+          {
+            <button id="chatSubmit" @onclick="Submit">
                 Submit
             </button>
+          }
+
+
+
+
+
+
             <button id="VoiceRecord" @onclick="VoiceRecord">
                 @sounrRecordError
             </button>
@@ -129,6 +148,7 @@
 
 
 @code {
+    bool submitDisabled;
 
     string sounrRecordError = "Nagranie Głosu";
     int? selectedBot;
@@ -136,17 +156,15 @@
     bool firstRender;
     private string text = "";
     List<Chat> chats;
-    List<Message> messages = new List<Message>() 
-    { 
-        // new Message(DateTime.Now, "Test1", true), 
-        // new Message(DateTime.Now, "Test2", false), 
-        // new Message(DateTime.Now, "Test2", true) 
-    };
+    ChatHistory chatHistory; 
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            submitDisabled = false;
+            chatHistory = new ChatHistory(null, new List<Message>());
+
             string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
             if (clientIP.Equals("::1"))
                 clientIP = "localhost";
@@ -157,7 +175,7 @@
                 Chat defaultChat = chats.First();
 
                 currentConversation = defaultChat;
-                messages = _chatService.GetChatHistory(clientIP, defaultChat);
+                chatHistory = _chatService.GetChatHistory(clientIP, defaultChat);
             }
             else
             {
@@ -173,7 +191,7 @@
         }
     }
 
-    protected async Task OnClickChangeData(int idOfDataFile)
+    protected async Task OnClickChangeBotType(int idOfDataFile)
     {
         try
         {
@@ -182,7 +200,12 @@
                 clientIP = "localhost";
 
             selectedBot = idOfDataFile;
-            messages = _chatService.GetChatHistory(clientIP, currentConversation);
+            chatHistory = _chatService.GetChatHistory(clientIP, currentConversation);
+
+            if(chatHistory.BotType == null)
+            {
+                chatHistory.BotType = selectedBot;
+            }
 
             StateHasChanged();
 
@@ -201,7 +224,7 @@
             if (clientIP.Equals("::1"))
                 clientIP = "localhost";
 
-            messages = _chatService.GetChatHistory(clientIP, chat);
+            chatHistory = _chatService.GetChatHistory(clientIP, chat);
 
             currentConversation = chat;
             StateHasChanged();
@@ -248,20 +271,23 @@
     {
         try
         {
-            string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-            if (clientIP == null)
-                return;
-            if (clientIP.Equals("::1"))
-                clientIP = "localhost";
-            chats = _chatService.GetUserChatList(clientIP);
+
 
             // execute conditionally for loading data, otherwise this will load
             // every time the page refreshes
             if (firstRender)
             {
+
+                string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                if (clientIP == null)
+                    return;
+                if (clientIP.Equals("::1"))
+                    clientIP = "localhost";
+                chats = _chatService.GetUserChatList(clientIP);
+
                 // Do work to load page data and set properties
+                StateHasChanged();
             }
-            StateHasChanged();
         }
         catch(Exception ex)
         {
@@ -272,21 +298,24 @@
 
     private async Task Submit()
     {
+        submitDisabled = true;
+        StateHasChanged();
+
         string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
         if (clientIP == null)
             clientIP = "undefinded";
 
 
         Message message = new Message(DateTime.Now, text, true);
-        bool humanResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP,currentConversation, message);
-        messages.Add(message);
+        bool humanResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, currentConversation, message, selectedBot.Value);
+        chatHistory.Messages.Add(message);
 
         string resonse = await _modelCallerService.AskModel(clientIP, text, selectedBot.Value);
         Message botResponseMessage = new Message(DateTime.Now, resonse, false);
-        bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP,currentConversation, botResponseMessage);
-        messages.Add(botResponseMessage);
+        bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, currentConversation, botResponseMessage, selectedBot.Value);
+        chatHistory.Messages.Add(botResponseMessage);
 
-
+        submitDisabled = false;
         StateHasChanged();
     }
 

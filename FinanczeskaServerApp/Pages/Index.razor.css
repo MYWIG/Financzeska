@@ -285,13 +285,14 @@
     }
 
 .footer-chat {
-    width: calc(65% - 66px);
+    width: calc(55% - 66px);
     height: 80px;
     display: flex;
     align-items: center;
     position: absolute;
     bottom: 0;
     background-color: transparent;
+    margin: 5px;
 }
 
 .chat .footer-chat .icon {
