@@ -182,6 +182,8 @@
 
 .chat {
     width: calc(65% - 85px);
+    max-height: 700px;
+    overflow: auto;
 }
 
 .header-chat {
@@ -274,7 +276,6 @@
     position: absolute;
     bottom: 0;
     background-color: transparent;
-    border-top: 2px solid #EEE;
 }
 
 .chat .footer-chat .icon {
@@ -309,9 +310,8 @@
 .write-message {
     border: none !important;
     width: 60%;
-    height: 50px;
+    height: 100%;
     margin-left: 20px;
-    padding: 10px;
 }
 
 .footer-chat *::-webkit-input-placeholder {
