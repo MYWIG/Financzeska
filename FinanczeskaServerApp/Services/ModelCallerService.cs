@@ -107,7 +107,7 @@ namespace FinanczeskaServerApp.Services
                     ""rep_pen_range"": 320,
                     ""rep_pen_slope"": 0.7,
                     ""sampler_order"": [6, 0, 1, 3, 4, 2, 5],
-                    ""prompt"": ""[Jesteś AI. Odpowiadasz nie więcej, niż 15 słów. {formattedCsv}]\n\n{clientMessege}"",
+                    ""prompt"": ""[Twoje zachowanie: jesteś asystentem, nie zadajesz pytania, jesteś precyzyjny, twój temat to finansy oraz bankowość, inne tematy ignorujesz, odpowiadasz nie więcej, niż 15 słów, nie przeklinasz i jesteś grzeczny, nie razmawiasz na tematy nie związane z pytaniem.  {formattedCsv}]\n\n{clientMessege}"",
                     ""quiet"": true,
                     ""stop_sequence"": [""You: "", ""\nYou "", ""\nKoboldAI: ""]
                 }}";
@@ -131,7 +131,7 @@ namespace FinanczeskaServerApp.Services
 
                 // Access the strongly typed data
                 string text = rootObject.results[0].text;
-                return "";
+                return text;
             }
             catch (Exception ex)
             {
