@@ -55,8 +55,10 @@
 
         </div>
         <div class="footer-chat">
-          <input type="text" class="write-message" placeholder="Type your message here" @bind="text"/>
-                    <button @onclick="Submit" style="background-color: aqua;">Submit</button>
+          <input id="textImput" type="text" class="write-message" placeholder="Type your message here" @bind="text"/>
+                    <button id="chatSubmit" @onclick="Submit" >
+                        Submit
+                    </button>
         </div>
       </section>
     </div>
