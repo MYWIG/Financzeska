@@ -107,7 +107,8 @@ namespace FinanczeskaServerApp.Services
                     ""rep_pen_range"": 100,
                     ""rep_pen_slope"": 0.7,
                     ""sampler_order"": [6, 0, 1, 3, 4, 2, 5],
-                    ""prompt"": ""[Twoje zachowanie: jesteś asystentem, nie zadajesz pytania, jesteś precyzyjny, twój temat to finansy oraz bankowość, inne tematy ignorujesz, odpowiadasz nie więcej, niż 15 słów, nie przeklinasz i jesteś grzeczny, nie razmawiasz na tematy nie związane z pytaniem.  {formattedCsv}]\n\n{clientMessege}"",
+                    ""system_prompt"": """",  
+                    ""prompt"": ""[jesteś asystentem, nie zadajesz pytania, jesteś precyzyjny, twój temat to finansy oraz bankowość, inne tematy ignorujesz, odpowiadasz nie więcej, niż 15 słów, nie przeklinasz i jesteś grzeczny, nie razmawiasz na tematy nie związane z pytaniem, na pytania nie związane z twoim zakresem obowiązków przepraszasz. wiesz te dane: {formattedCsv}]\n\n{userInputData}"",
                     ""quiet"": true,
                     ""stop_sequence"": [""You: "", ""\nYou "", ""\nKoboldAI: ""]
                 }}";
