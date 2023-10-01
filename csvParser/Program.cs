@@ -13,13 +13,13 @@ namespace csvParser
         {
             // Define the API endpoint URL
             string apiUrl = "http://46.170.221.65:5001/api/v1/generate";
-            string filePath = "E:\\Downloads\\Struktura_zarejestrowanych_bezrobotnych_w_roku_2022.csv";
+            string filePath = "E:\\Downloads\\Struktura_wieku_osób_bezrobotnych_w_roku_2022.csv";
 
             try
             {
                 string formattedCsv = ParseCsvAndFormat(filePath);
 
-                string clientMessege = "Ile bezrobotnych bylo w drugim kwartale?";
+                string clientMessege = "Ile oswiadczen bylo w drugim kwartale?";
 
                 // Define the JSON data to send to the server
                 string jsonData = $@"{{
@@ -36,7 +36,7 @@ namespace csvParser
                     ""rep_pen_range"": 320,
                     ""rep_pen_slope"": 0.7,
                     ""sampler_order"": [6, 0, 1, 3, 4, 2, 5],
-                    ""prompt"": ""[Jesteś AI. Odpowiadasz nie więcej, niż 15 słów. {formattedCsv}]\n\n{clientMessege}"",
+                    ""prompt"": ""[Jesteś AI. Nigdy nie zadajesz pytań. Odpowiadasz nie więcej, niż 15 słów. {formattedCsv}]\n\n{clientMessege}"",
                     ""quiet"": true,
                     ""stop_sequence"": [""You: "", ""\nYou "", ""\nKoboldAI: ""]
                 }}";
