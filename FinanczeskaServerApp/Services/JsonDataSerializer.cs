@@ -15,7 +15,7 @@ namespace FinanczeskaServerApp.Services
         }
 
         //method for serializing data to json
-        public bool SerializeToJson(string ip, string currentConversation, Message value)
+        public bool SerializeToJson(string ip, Chat currentConversation, Message value)
         {
             try
             {
@@ -26,12 +26,12 @@ namespace FinanczeskaServerApp.Services
                 var json = System.Text.Json.JsonSerializer.Serialize(value);
 
                 // create User Dir
-                string dir = Path.Combine(_environment.ContentRootPath, ip);
+                string dir = Path.Combine(_environment.ContentRootPath+ "Chats", ip);
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
                 // Todays File
-                string filePath = Path.Combine(dir, $"{currentConversation}-{DateTime.Now:yyyy-MM-dd}.json");
+                string filePath = Path.Combine(dir, $"{currentConversation.Name}_{DateTime.Now:yyyy-MM-dd}.json");
 
                 if (!File.Exists(filePath))
                     File.Create(filePath);
