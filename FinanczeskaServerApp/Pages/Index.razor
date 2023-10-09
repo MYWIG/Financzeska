@@ -7,7 +7,7 @@
 @inject IHttpContextAccessor _httpContextAccessor;
 
 <body>
-  <div class="container">
+  <div id="cntr" >
     <div class="row">
 
 
@@ -37,7 +37,7 @@
 
 
       </section>
-            <section class="chat" style="padding: 0px 0px;">
+            <section class="chat" >
 
                 <div class="alert alert-primary" style="background-color: #dee5f5; border-color: #60728b; text-align: center;     margin: 0 2.3em;">
                     <p style="font-size: 24px;">
@@ -117,7 +117,7 @@
             }
 
         </div>
-                <div class="footer-chat" style="background-color: #fff;">
+                <div class="footer-chat">
           <input id="textImput" type="text" class="write-message" placeholder="Type your message here" @bind="text"/>
 
           @if(submitDisabled){

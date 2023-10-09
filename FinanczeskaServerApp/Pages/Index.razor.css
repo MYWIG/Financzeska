@@ -1,11 +1,12 @@
 ﻿body {
-
-    background-color: #F5F5F5;
+    background-color: #1e6583;
 }
+
+
+
 
 .container {
     padding: 0;
-    background-color: #FFF;
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     height: 700px;
 }
@@ -29,7 +30,6 @@
 .menu {
     float: left;
     height: 700px;
-    ;
     width: 70px;
     background: #4768b5;
     background: -webkit-linear-gradient(#4768b5, #35488e);
@@ -197,9 +197,11 @@
 }
 
 .chat {
-    width: calc(65% - 85px);
     max-height: 700px;
     overflow: auto;
+    padding: 0px 0px;
+    margin-top: 70px;
+    background-color: #022030;
 }
 
 .header-chat {
@@ -243,7 +245,8 @@
             display: block;
             width: 45px;
             height: 45px;
-            background: #E6E7ED;
+            /*background: #E6E7ED;*/
+            background :#022030 ;
             -moz-border-radius: 50px;
             -webkit-border-radius: 50px;
             background-position: center;
