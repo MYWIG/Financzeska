@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ChatService>();
+builder.Services.AddScoped<S4HBIService>();
 builder.Services.AddTransient<JsonDataSerializer>();
 builder.Services.AddTransient<ModelCallerService>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
@@ -40,6 +41,18 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    //endpoints.MapControllerRoute(
+    //    name: "data",
+    //    pattern: "data",
+    //    defaults: new { controller = "Data", action = "ReceiveData" });
+});
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

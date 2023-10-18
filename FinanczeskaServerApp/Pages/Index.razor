@@ -4,6 +4,7 @@
 @inject JsonDataSerializer _jsonDataSerializer;
 @inject ChatService _chatService;
 @inject ModelCallerService _modelCallerService;
+@inject S4HBIService _S4HBIService;
 @inject IHttpContextAccessor _httpContextAccessor;
 
 <body>
@@ -38,7 +39,7 @@
 
       </section>
             <section class="chat" style="padding: 0px 0px;">
-
+@* 
                 <div class="alert alert-primary" style="background-color: #dee5f5; border-color: #60728b; text-align: center;     margin: 0 2.3em;">
                     <p style="font-size: 24px;">
                      
@@ -67,11 +68,13 @@
                                 break;
                         }
                     </p>
-                </div>
+                </div> *@
 
 
                  <div class="messages-chat" style="margin-bottom: 3em; padding: 0px 0px;">
-                    @if (chatHistory.Messages.Count == 0 && selectedBot == null)
+
+
+@*                     @if (chatHistory.Messages.Count == 0 && selectedBot == null)
                     {
                         <div class="message, text">
                             <p>Prosze wybrać bota, z którym mozna prowadzić rozmowe na temat finansowy albo statystyczny: </p>
@@ -91,7 +94,7 @@
                             
                             
                         </div> 
-                    }
+                    } *@
 @*                     else
                     {
                         <p>Wybrany zostal bot </p>
@@ -307,12 +310,15 @@
 
 
         Message message = new Message(DateTime.Now, text, true);
-        bool humanResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, currentConversation, message, selectedBot.Value);
+        //bool humanResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, currentConversation, message, selectedBot.Value);
         chatHistory.Messages.Add(message);
 
-        string resonse = await _modelCallerService.AskModel(clientIP, text, selectedBot.Value);
+
+        string s4HContextData = await _S4HBIService.GetS4HContextData();
+
+        string resonse = await _modelCallerService.AskModel(clientIP, text, s4HContextData);
         Message botResponseMessage = new Message(DateTime.Now, resonse, false);
-        bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, currentConversation, botResponseMessage, selectedBot.Value);
+        //bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, currentConversation, botResponseMessage, selectedBot.Value);
         chatHistory.Messages.Add(botResponseMessage);
 
         submitDisabled = false;
