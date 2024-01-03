@@ -1,7 +1,11 @@
-﻿namespace FinanczeskaServerApp.Data
+﻿using Newtonsoft.Json;
+
+namespace FinanczeskaServerApp.Data
 {
     public class RootObject
     {
-        public List<Result> results { get; set; }
+
+        [JsonProperty("results")]
+        public List<Result> Results { get; set; } = new List<Result>();
     }
 }

@@ -159,7 +159,8 @@
     bool firstRender;
     private string text = "";
     List<Chat> chats;
-    ChatHistory chatHistory; 
+    ChatHistory chatHistory;
+    RootObject rootObject;
 
     protected override async Task OnInitializedAsync()
     {
@@ -167,6 +168,7 @@
         {
             submitDisabled = false;
             chatHistory = new ChatHistory(null, new List<Message>());
+            rootObject = new RootObject();
 
             string? clientIP = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
             if (clientIP.Equals("::1"))
@@ -316,8 +318,10 @@
 
         string s4HContextData = await _S4HBIService.GetS4HContextData();
 
-        string resonse = await _modelCallerService.AskModel(clientIP, text, s4HContextData);
-        Message botResponseMessage = new Message(DateTime.Now, resonse, false);
+        rootObject = await _modelCallerService.AskModel(clientIP, rootObject, text, s4HContextData);
+        var lastResponse = rootObject.Results.Last();
+
+        Message botResponseMessage = new Message(DateTime.Now, lastResponse.text, false);
         //bool botResponseSaveResult = _jsonDataSerializer.SerializeToJson(clientIP, currentConversation, botResponseMessage, selectedBot.Value);
         chatHistory.Messages.Add(botResponseMessage);
 
